@@ -1,28 +1,71 @@
 <div class="dashboard-container">
-  <header class="header">
-    <h1>Net Worth Calculator</h1>
-    <p class="subtitle">Track your assets and their current values</p>
-  </header>
+  @if (selectedCategory()) {
+    <div class="category-header">
+      <h2>{{ selectedCategory() }} Assets</h2>
+      <p>Viewing {{ filteredItemCount() }} items in this category</p>
+      <button class="clear-filter" (click)="selectCategory(selectedCategory() || '')">
+        Clear Filter
+      </button>
+    </div>
+  }
 
   <div class="summary-cards">
+    <div class="card purchase-value">
+      <h2>
+        @if (selectedCategory()) {
+          {{ selectedCategory() }} Original Value
+        } @else {
+          Total Original Value
+        }
+      </h2>
+      <p class="value">{{ totalPurchaseValue() | currency:'CZK':'':'1.0-0' }} CZK</p>
+    </div>
     <div class="card net-worth">
-      <h2>Total Net Worth</h2>
+      <h2>
+        @if (selectedCategory()) {
+          {{ selectedCategory() }} Current Value
+        } @else {
+          Total Current Value
+        }
+      </h2>
       <p class="value">{{ netWorth() | currency:'CZK':'':'1.0-0' }} CZK</p>
+      <div class="percentage-container">
+        <p class="percentage-indicator">
+          <span class="label">{{ 100 - depreciationPercentageFromOriginal() | number:'1.1-1' }}% of original value</span>
+        </p>
+      </div>
     </div>
     <div class="card depreciation">
-      <h2>Total Depreciation</h2>
+      <h2>
+        @if (selectedCategory()) {
+          {{ selectedCategory() }} Depreciation
+        } @else {
+          Total Depreciation
+        }
+      </h2>
       <p class="value">{{ depreciation() | currency:'CZK':'':'1.0-0' }} CZK</p>
+      <div class="depreciation-percentages">
+        <p class="percentage-indicator">
+          <span class="label">- {{ depreciationPercentageFromCurrent() | number:'1.1-1' }}% depreciation</span>
+        </p>
+      </div>
     </div>
     <div class="card item-count">
-      <h2>Total Items</h2>
-      <p class="value">{{ items().length }}</p>
+      <h2>
+        @if (selectedCategory()) {
+          {{ selectedCategory() }} Items
+        } @else {
+          Total Items
+        }
+      </h2>
+      <p class="value">{{ filteredItemCount() }}</p>
     </div>
   </div>
 
   <div class="dashboard-content">
     <div class="section">
       <div class="section-header">
-        <h2>Most Valuable Items</h2>
+        <h2>{{ itemsSectionTitle() }}</h2>
         <a [routerLink]="['/items']" class="view-all">View All</a>
       </div>
       
@@ -63,11 +106,25 @@
         } @else {
           <div class="categories-grid">
             @for (category of categorySummary(); track category.category) {
-              <div class="category-card">
+              <div 
+                class="category-card" 
+                [class.active]="selectedCategory() === category.category"
+                (click)="selectCategory(category.category)">
                 <h3>{{ category.category }}</h3>
                 <p class="count">{{ category.count }} item(s)</p>
                 <p class="value">{{ category.totalValue | currency:'CZK':'':'1.0-0' }} CZK</p>
-                <p class="percentage">{{ category.percentage }}% of total</p>
+                <p class="percentage">
+                  @if (selectedCategory()) {
+                    @if (selectedCategory() === category.category) {
+                      {{ category.percentage }}% (selected)
+                    } @else {
+                      {{ category.percentage }}% relative to {{ selectedCategory() }}
+                    }
+                  } @else {
+                    {{ category.percentage }}% of total
+                  }
+                </p>
+                <div class="click-hint">Click to filter items</div>
               </div>
             }
           </div>

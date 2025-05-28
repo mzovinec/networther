@@ -5,7 +5,35 @@
   </header>
 
   <div class="actions-bar">
-    <a [routerLink]="['/add-item']" class="add-btn">Add New Item</a>
+    <div class="left-actions">
+      <a [routerLink]="['/add-item']" class="add-btn">Add New Item</a>
+      
+      <div class="filter-container">
+        <label for="category-filter">Filter by Category:</label>
+        <select 
+          id="category-filter" 
+          class="category-filter"
+          (change)="setFilter($any($event.target).value || null)">
+          <option value="">All Categories</option>
+          @for (category of availableCategories(); track category) {
+            <option 
+              [value]="category" 
+              [selected]="filterCategory() === category">
+              {{ category }}
+            </option>
+          }
+        </select>
+        @if (filterCategory()) {
+          <button 
+            type="button" 
+            class="clear-filter-btn" 
+            (click)="setFilter(null)">
+            Clear
+          </button>
+        }
+      </div>
+    </div>
+    
     <a [routerLink]="['/']" class="dashboard-btn">Dashboard</a>
   </div>
 
@@ -21,11 +49,21 @@
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Purchase Price</th>
-              <th>Purchase Date</th>
-              <th>Current Value</th>
+              <th (click)="sortBy('name')" class="sortable">
+                Name <span [class]="getSortIconClass('name')"></span>
+              </th>
+              <th (click)="sortBy('category')" class="sortable">
+                Category <span [class]="getSortIconClass('category')"></span>
+              </th>
+              <th (click)="sortBy('purchasePrice')" class="sortable">
+                Purchase Price <span [class]="getSortIconClass('purchasePrice')"></span>
+              </th>
+              <th (click)="sortBy('purchaseDate')" class="sortable">
+                Purchase Date <span [class]="getSortIconClass('purchaseDate')"></span>
+              </th>
+              <th (click)="sortBy('currentValue')" class="sortable">
+                Current Value <span [class]="getSortIconClass('currentValue')"></span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>

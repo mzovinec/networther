@@ -4,9 +4,63 @@
   padding: 24px;
 }
 
+.category-header {
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  
+  h2 {
+    font-size: 1.5rem;
+    color: #1976d2;
+    margin: 0 0 8px 0;
+  }
+  
+  p {
+    color: #555;
+    margin: 0 0 16px 0;
+  }
+  
+  .clear-filter {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #d32f2f;
+    }
+  }
+}
+
 .header {
   margin-bottom: 32px;
   text-align: center;
+  position: relative;
+  
+  .clear-filter {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #d32f2f;
+    }
+  }
 }
 
 h1 {
@@ -54,6 +108,25 @@ h1 {
   
   .value {
     color: #00838f;
+    margin-bottom: 10px;
+  }
+  
+  .percentage-container {
+    margin-top: 5px;
+  }
+  
+  .percentage-indicator {
+    font-size: 0.9rem;
+    color: #006064;
+    margin: 0;
+    padding: 4px 8px;
+    background-color: rgba(178, 235, 242, 0.5);
+    border-radius: 4px;
+    display: inline-block;
+    
+    .label {
+      font-weight: 500;
+    }
   }
 }
 
@@ -62,6 +135,28 @@ h1 {
   
   .value {
     color: #ff8f00;
+    margin-bottom: 10px;
+  }
+  
+  .depreciation-percentages {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  
+  .percentage-indicator {
+    font-size: 0.9rem;
+    color: #b26a00;
+    margin: 0;
+    padding: 4px 8px;
+    background-color: rgba(255, 236, 179, 0.5);
+    border-radius: 4px;
+    display: inline-block;
+    
+    .label {
+      font-weight: 500;
+    }
   }
 }
 
@@ -155,6 +250,29 @@ table {
   border-radius: 8px;
   padding: 16px;
   text-align: center;
+  position: relative;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+  }
+  
+  &.active {
+    border-color: #2196f3;
+    background-color: #e3f2fd;
+    
+    h3 {
+      color: #1976d2;
+    }
+    
+    .click-hint {
+      opacity: 0;
+    }
+  }
   
   h3 {
     font-size: 1.1rem;
@@ -178,6 +296,19 @@ table {
   .percentage {
     font-size: 0.9rem;
     color: #777;
+    margin-bottom: 8px;
+  }
+  
+  .click-hint {
+    font-size: 0.8rem;
+    color: #999;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  &:hover .click-hint {
+    opacity: 1;
   }
 }
 

@@ -25,18 +25,35 @@ h1 {
   justify-content: space-between;
   margin-bottom: 24px;
   
+  .left-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    
+    @media (max-width: 768px) {
+      margin-bottom: 12px;
+    }
+  }
+  
   @media (max-width: 480px) {
     flex-direction: column;
     gap: 12px;
     
-    .add-btn, .dashboard-btn {
+    .left-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .add-btn, .dashboard-btn, .clear-filter-btn {
       width: 100%;
       text-align: center;
     }
   }
 }
 
-.add-btn, .dashboard-btn {
+.add-btn, .dashboard-btn, .clear-filter-btn {
   display: inline-block;
   padding: 12px 24px;
   border-radius: 8px;
@@ -60,6 +77,60 @@ h1 {
   
   &:hover {
     background-color: #e0e0e0;
+  }
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  label {
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .category-filter {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    min-width: 160px;
+    background-color: white;
+    
+    &:focus {
+      outline: none;
+      border-color: #2196f3;
+      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+    }
+  }
+  
+  .clear-filter-btn {
+    background-color: #ff9800;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: #f57c00;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    width: 100%;
+    
+    label {
+      width: 100%;
+      margin-bottom: 4px;
+    }
+    
+    .category-filter {
+      flex-grow: 1;
+    }
   }
 }
 
@@ -93,6 +164,74 @@ table {
     color: #666;
     font-weight: 600;
     font-size: 0.9rem;
+    
+    &.sortable {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      padding-right: 24px; // Space for the sort icon
+      
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+  
+  .sort-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    display: inline-block;
+    opacity: 0.3;
+    
+    // Default sort icon (neutral)
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      left: 0;
+    }
+    
+    &::before {
+      border-bottom: 5px solid #666;
+      top: -6px;
+    }
+    
+    &::after {
+      border-top: 5px solid #666;
+      bottom: -6px;
+    }
+    
+    // Active ascending sort
+    &.asc {
+      opacity: 1;
+      
+      &::before {
+        border-bottom: 5px solid #2196f3;
+      }
+      
+      &::after {
+        opacity: 0.3;
+      }
+    }
+    
+    // Active descending sort
+    &.desc {
+      opacity: 1;
+      
+      &::after {
+        border-top: 5px solid #2196f3;
+      }
+      
+      &::before {
+        opacity: 0.3;
+      }
+    }
   }
   
   td {
