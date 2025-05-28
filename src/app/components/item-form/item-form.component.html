@@ -1,9 +1,4 @@
 <div class="form-container">
-  <header>
-    <h1>{{ isEditMode ? 'Edit Item' : 'Add New Item' }}</h1>
-    <p class="subtitle">{{ isEditMode ? 'Update your item details' : 'Add a new item to track its value' }}</p>
-  </header>
-
   <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Item Name</label>

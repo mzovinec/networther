@@ -4,7 +4,6 @@ import { ItemService } from '../../services/item.service';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { Item } from '../../models/item.model';
-import { TitleService } from '../../services/title.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,12 +20,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   selectedCategory = signal<string | null>(null);
   topItems: any;
   categorySummary: any;
-  
-  // Title for the items section
-  itemsSectionTitle = computed(() => {
-    const category = this.selectedCategory();
-    return category ? `Top Items in ${category}` : 'Most Valuable Items';
-  });
   
   // Filtered item count
   filteredItemCount = computed(() => {
@@ -52,7 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return (this.depreciation() / (currentValue + this.depreciation())) * 100;
   });
 
-  constructor(private itemService: ItemService, private router: Router, private titleService: TitleService) {
+  constructor(private itemService: ItemService, private router: Router) {
     this.items = this.itemService.getItems();
     
     // Calculate net worth - filtered by category if one is selected
@@ -161,38 +154,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.selectedCategory() === category) {
       // If clicking the already selected category, clear the filter
       this.selectedCategory.set(null);
-      this.updatePageTitle();
     } else {
       // Otherwise, set the filter to the clicked category
       this.selectedCategory.set(category);
-      this.updatePageTitle();
     }
   }
   
   private titleEffect = effect(() => {
     // This effect will run whenever selectedCategory signal changes
     const category = this.selectedCategory();
-    this.updatePageTitle();
   });
   
   ngOnInit(): void {
     // Initial title update
-    this.updatePageTitle();
   }
   
   ngOnDestroy(): void {
     // Clean up any subscriptions if needed
   }
   
-  private updatePageTitle(): void {
-    const category = this.selectedCategory();
-    
-    if (category) {
-      this.titleService.setTitle(`${category} Assets`);
-      this.titleService.setSubtitle(`Viewing ${this.filteredItemCount()} items in this category`);
-    } else {
-      this.titleService.setTitle('Dashboard');
-      this.titleService.setSubtitle('Track your assets and their current values');
-    }
-  }
 }

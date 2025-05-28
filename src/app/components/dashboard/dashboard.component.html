@@ -1,14 +1,4 @@
 <div class="dashboard-container">
-  @if (selectedCategory()) {
-    <div class="category-header">
-      <h2>{{ selectedCategory() }} Assets</h2>
-      <p>Viewing {{ filteredItemCount() }} items in this category</p>
-      <button class="clear-filter" (click)="selectCategory(selectedCategory() || '')">
-        Clear Filter
-      </button>
-    </div>
-  }
-
   <div class="summary-cards">
     <div class="card purchase-value">
       <h2>
@@ -65,7 +55,6 @@
   <div class="dashboard-content">
     <div class="section">
       <div class="section-header">
-        <h2>{{ itemsSectionTitle() }}</h2>
         <a [routerLink]="['/items']" class="view-all">View All</a>
       </div>
       
