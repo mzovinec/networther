@@ -1,0 +1,32 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="header-content">
+      <div class="logo">NetWorther</div>
+      
+      <!-- Mobile menu toggle button -->
+      <button class="mobile-menu-toggle" [class.active]="mobileMenuOpen" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      
+      <!-- Navigation menu with mobile support -->
+      <nav class="main-nav" [class.mobile-open]="mobileMenuOpen">
+        <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Dashboard</a>
+        <a [routerLink]="['/items']" routerLinkActive="active" (click)="closeMobileMenu()">Items</a>
+        <a [routerLink]="['/add-item']" routerLinkActive="active" (click)="closeMobileMenu()">Add Item</a>
+        <a [routerLink]="['/settings']" routerLinkActive="active" (click)="closeMobileMenu()">Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 NetWorther - Track your assets in CZK</p>
+    </div>
+  </footer>
+</div>

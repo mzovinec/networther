@@ -1,0 +1,253 @@
+.list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  color: #2a2a2a;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.actions-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 12px;
+    
+    .add-btn, .dashboard-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+.add-btn, .dashboard-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.add-btn {
+  background-color: #2196f3;
+  color: white;
+  
+  &:hover {
+    background-color: #1976d2;
+  }
+}
+
+.dashboard-btn {
+  background-color: #f5f5f5;
+  color: #555;
+  
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.items-list {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+// Desktop table view
+.desktop-table-view {
+  display: block;
+  
+  @media (max-width: 640px) {
+    display: none; // Hide table on mobile
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  th {
+    color: #666;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  
+  td {
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    th, td {
+      padding: 12px 8px;
+    }
+    
+    th:nth-child(4), /* Purchase Date */
+    td:nth-child(4) {
+      display: none; /* Hide purchase date column on mobile */
+    }
+  }
+}
+
+// Mobile card view
+.mobile-card-view {
+  display: none; // Hidden by default
+  
+  @media (max-width: 640px) {
+    display: block; // Show on mobile
+  }
+  
+  .item-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .item-name {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .item-details {
+    margin-bottom: 16px;
+  }
+  
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &.current-value {
+      font-weight: 600;
+      color: #1976d2;
+    }
+  }
+  
+  .detail-label {
+    color: #666;
+  }
+  
+  .detail-value {
+    text-align: right;
+  }
+  
+  .item-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+    
+    .edit-btn, .delete-btn {
+      flex: 1;
+      text-align: center;
+    }
+  }
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn, .delete-btn {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  text-decoration: none;
+  
+  &:hover {
+    background-color: #bbdefb;
+  }
+}
+
+.delete-btn {
+  background-color: #ffebee;
+  color: #c62828;
+  border: none;
+  
+  &:hover {
+    background-color: #ffcdd2;
+  }
+}
+
+.empty-state {
+  padding: 48px;
+  text-align: center;
+  
+  p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 24px;
+  }
+}
+
+.empty-add-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #2196f3;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  
+  &:hover {
+    background-color: #1976d2;
+  }
+}

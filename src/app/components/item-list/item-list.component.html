@@ -1,0 +1,83 @@
+<div class="list-container">
+  <header>
+    <h1>Your Items</h1>
+    <p class="subtitle">Manage your tracked items</p>
+  </header>
+
+  <div class="actions-bar">
+    <a [routerLink]="['/add-item']" class="add-btn">Add New Item</a>
+    <a [routerLink]="['/']" class="dashboard-btn">Dashboard</a>
+  </div>
+
+  <div class="items-list">
+    @if (items().length === 0) {
+      <div class="empty-state">
+        <p>You haven't added any items yet.</p>
+        <a [routerLink]="['/add-item']" class="empty-add-btn">Add Your First Item</a>
+      </div>
+    } @else {
+      <!-- Desktop table view -->
+      <div class="desktop-table-view">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Purchase Price</th>
+              <th>Purchase Date</th>
+              <th>Current Value</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items(); track item.id) {
+              <tr>
+                <td>{{ item.name }}</td>
+                <td><span class="category-badge">{{ item.category }}</span></td>
+                <td>{{ item.purchasePrice | currency:'CZK':'':'1.0-0' }} CZK</td>
+                <td>{{ formatDate(item.purchaseDate) }}</td>
+                <td>{{ item.currentValue | currency:'CZK':'':'1.0-0' }} CZK</td>
+                <td class="actions">
+                  <a [routerLink]="['/edit-item', item.id]" class="edit-btn">Edit</a>
+                  <button (click)="deleteItem(item.id, $event)" class="delete-btn">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Mobile card view -->
+      <div class="mobile-card-view">
+        @for (item of items(); track item.id) {
+          <div class="item-card">
+            <div class="item-header">
+              <h3 class="item-name">{{ item.name }}</h3>
+              <span class="category-badge">{{ item.category }}</span>
+            </div>
+            
+            <div class="item-details">
+              <div class="detail-row">
+                <span class="detail-label">Purchase Price:</span>
+                <span class="detail-value">{{ item.purchasePrice | currency:'CZK':'':'1.0-0' }} CZK</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Purchase Date:</span>
+                <span class="detail-value">{{ formatDate(item.purchaseDate) }}</span>
+              </div>
+              <div class="detail-row current-value">
+                <span class="detail-label">Current Value:</span>
+                <span class="detail-value">{{ item.currentValue | currency:'CZK':'':'1.0-0' }} CZK</span>
+              </div>
+            </div>
+            
+            <div class="item-actions">
+              <a [routerLink]="['/edit-item', item.id]" class="edit-btn">Edit</a>
+              <button (click)="deleteItem(item.id, $event)" class="delete-btn">Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

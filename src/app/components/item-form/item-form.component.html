@@ -1,0 +1,156 @@
+<div class="form-container">
+  <header>
+    <h1>{{ isEditMode ? 'Edit Item' : 'Add New Item' }}</h1>
+    <p class="subtitle">{{ isEditMode ? 'Update your item details' : 'Add a new item to track its value' }}</p>
+  </header>
+
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Item Name</label>
+      <input 
+        type="text" 
+        id="name" 
+        formControlName="name" 
+        placeholder="e.g., MacBook Pro, Diamond Ring">
+      @if (itemForm.get('name')?.invalid && itemForm.get('name')?.touched) {
+        <div class="error-message">
+          Name is required and must be at least 2 characters
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category" formControlName="category">
+        @for (category of categories; track category) {
+          <option [value]="category">{{ category }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="purchasePrice">Purchase Price</label>
+      <div class="input-with-prefix">
+        <span class="prefix">Kč</span>
+        <input 
+          type="number" 
+          id="purchasePrice" 
+          formControlName="purchasePrice" 
+          min="0" 
+          step="0.01">
+      </div>
+      @if (itemForm.get('purchasePrice')?.invalid && itemForm.get('purchasePrice')?.touched) {
+        <div class="error-message">
+          Purchase price must be a positive number
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label>Purchase Date</label>
+      <div class="date-inputs-container">
+        <div class="date-input-group">
+          <input 
+            type="number" 
+            id="purchaseDay" 
+            placeholder="DD" 
+            min="1" 
+            max="31" 
+            (input)="onDateInputChange('day', $event)" 
+            (keyup)="onDateKeyUp('day', $event)" 
+            (paste)="onDatePaste($event)"
+            #dayInput>
+          <span class="date-separator">/</span>
+        </div>
+        <div class="date-input-group">
+          <input 
+            type="number" 
+            id="purchaseMonth" 
+            placeholder="MM" 
+            min="1" 
+            max="12" 
+            (input)="onDateInputChange('month', $event)" 
+            (keyup)="onDateKeyUp('month', $event)"
+            #monthInput>
+          <span class="date-separator">/</span>
+        </div>
+        <div class="date-input-group">
+          <input 
+            type="number" 
+            id="purchaseYear" 
+            placeholder="YYYY" 
+            min="1900" 
+            max="2100" 
+            (input)="onDateInputChange('year', $event)" 
+            (keyup)="onDateKeyUp('year', $event)"
+            #yearInput>
+        </div>
+        <input 
+          type="hidden" 
+          id="purchaseDate" 
+          formControlName="purchaseDate">
+      </div>
+      @if (itemForm.get('purchaseDate')?.invalid && itemForm.get('purchaseDate')?.touched) {
+        <div class="error-message">
+          Valid purchase date is required
+        </div>
+      }
+      @if (dateInputError) {
+        <div class="error-message">
+          {{ dateInputError }}
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="currentValue">
+        Current Value
+        @if (estimatedValue !== null) {
+          <button 
+            type="button" 
+            class="use-estimate-btn" 
+            (click)="useEstimatedValue()">
+            Use Estimate
+          </button>
+        }
+      </label>
+      <div class="input-with-prefix">
+        <span class="prefix">Kč</span>
+        <input 
+          type="number" 
+          id="currentValue" 
+          formControlName="currentValue" 
+          min="0" 
+          step="0.01">
+      </div>
+      @if (estimatedValue !== null) {
+        <div class="estimated-value">
+          Estimated value: <strong>{{ estimatedValue.toFixed(2) }} CZK</strong> based on category and age
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="notes">Notes (Optional)</label>
+      <textarea 
+        id="notes" 
+        formControlName="notes" 
+        rows="3" 
+        placeholder="Add any details about the item..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" [routerLink]="['/items']">Cancel</button>
+      @if (!isEditMode) {
+        <button 
+          type="button" 
+          class="add-another-btn" 
+          [disabled]="itemForm.invalid"
+          (click)="onSubmitAndAddAnother()">
+          Add & Continue
+        </button>
+      }
+      <button type="submit" class="submit-btn" [disabled]="itemForm.invalid">{{ isEditMode ? 'Update' : 'Add' }}</button>
+    </div>
+  </form>
+</div>
