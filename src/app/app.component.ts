@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'networther';
   mobileMenuOpen = false;
+  showFirstTimeNotification = false;
+  private readonly FIRST_VISIT_KEY = 'networther_first_visit';
   
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
@@ -27,5 +30,21 @@ export class AppComponent {
       this.mobileMenuOpen = false;
       document.body.style.overflow = '';
     }
+  }
+
+  ngOnInit() {
+    this.checkFirstVisit();
+  }
+
+  private checkFirstVisit() {
+    const hasVisited = localStorage.getItem(this.FIRST_VISIT_KEY);
+    if (!hasVisited) {
+      this.showFirstTimeNotification = true;
+      localStorage.setItem(this.FIRST_VISIT_KEY, 'true');
+    }
+  }
+
+  dismissNotification() {
+    this.showFirstTimeNotification = false;
   }
 }

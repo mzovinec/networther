@@ -48,8 +48,14 @@ export class ItemService {
     this.saveItems();
   }
 
-  deleteItem(id: string) {
+  deleteItem(id: string): void {
     this.items.update(items => items.filter(item => item.id !== id));
+    this.saveItems();
+  }
+
+  deleteAllItems(): void {
+    this.items.set([]);
+    this.nextId = 1;
     this.saveItems();
   }
 

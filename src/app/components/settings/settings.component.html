@@ -40,6 +40,27 @@
     </div>
 
     <div class="section">
+      <h2>Danger Zone</h2>
+      <p class="description">
+        These actions will modify your data. Use with caution.
+      </p>
+      
+      <div class="danger-actions">
+        <div class="action-section">
+          <h3>Add Sample Data</h3>
+          <p>Add sample items to get started quickly</p>
+          <button (click)="addDummyData()" class="btn btn-warning">Add Dummy Data</button>
+        </div>
+        
+        <div class="action-section">
+          <h3>Delete All Items</h3>
+          <p>Permanently remove all your items</p>
+          <button (click)="deleteAllItems()" class="btn btn-danger">Delete All Items</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
       <h2>About</h2>
       <p>
         NetWorther is a simple application to track your assets and calculate their current value.

@@ -1,4 +1,16 @@
 <div class="app-container">
+  <!-- First Time Notification -->
+  <div class="first-time-notification" *ngIf="showFirstTimeNotification">
+    <div class="notification-content">
+      <h3>Welcome to NetWorther! 👋</h3>
+      <p>Get started by adding your first items or importing existing data.</p>
+      <div class="notification-actions">
+        <button class="btn btn-secondary" (click)="dismissNotification()">Maybe later</button>
+        <button class="btn btn-primary" [routerLink]="['/settings']" (click)="dismissNotification()">Go to Settings</button>
+      </div>
+    </div>
+  </div>
+
   <header class="app-header">
     <div class="header-content">
       <div class="logo">NetWorther</div>

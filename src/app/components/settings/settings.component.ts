@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ItemService } from '../../services/item.service';
 
 @Component({
@@ -14,8 +15,76 @@ export class SettingsComponent {
   importStatus: 'idle' | 'success' | 'error' = 'idle';
   importMessage = '';
   
+  private http = inject(HttpClient);
+  
   constructor(private itemService: ItemService) {}
   
+  private resetStatus() {
+    this.importStatus = 'idle';
+    this.importMessage = '';
+  }
+  
+  deleteAllItems() {
+    if (confirm('Are you sure you want to delete all items? This action cannot be undone.')) {
+      this.itemService.deleteAllItems();
+      this.importStatus = 'success';
+      this.importMessage = 'All items have been deleted successfully.';
+      setTimeout(() => this.resetStatus(), 3000);
+    }
+  }
+
+  addDummyData() {
+    if (confirm('This will add sample data. Continue?')) {
+      this.importStatus = 'idle';
+      this.importMessage = 'Loading dummy data...';
+      
+      this.http.get('assets/dummy_data.json').subscribe({
+        next: (data: any) => {
+          try {
+            if (!data || !data.items || !Array.isArray(data.items)) {
+              throw new Error('Invalid dummy data format');
+            }
+            
+            // Process each item to ensure it has all required fields
+            const processedItems = data.items.map((item: any) => ({
+              ...item,
+              purchaseDate: new Date(item.purchaseDate).toISOString(),
+              // Ensure all required fields are present with defaults if missing
+              description: item.notes || '',
+              location: 'Unknown',
+              serialNumber: '',
+              warrantyExpiry: ''
+            }));
+            
+            // Import the data using the existing import functionality
+            const importSuccessful = this.itemService.importFromJson(JSON.stringify({
+              items: processedItems
+            }));
+            
+            if (importSuccessful) {
+              this.importStatus = 'success';
+              this.importMessage = 'Dummy data has been added successfully.';
+            } else {
+              throw new Error('Failed to import data');
+            }
+          } catch (error) {
+            console.error('Error processing dummy data:', error);
+            this.importStatus = 'error';
+            this.importMessage = 'Failed to process dummy data. Please try again.';
+          } finally {
+            setTimeout(() => this.resetStatus(), 3000);
+          }
+        },
+        error: (error) => {
+          console.error('Error loading dummy data:', error);
+          this.importStatus = 'error';
+          this.importMessage = 'Failed to load dummy data. Please try again.';
+          setTimeout(() => this.resetStatus(), 3000);
+        }
+      });
+    }
+  }
+
   exportData() {
     const jsonData = this.itemService.exportToJson();
     this.downloadJsonFile(jsonData, 'networther-data.json');

@@ -155,6 +155,90 @@
   }
 }
 
+// First time notification styles
+.first-time-notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.3s ease-in-out;
+  
+  .notification-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 90%;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    
+    h3 {
+      margin-top: 0;
+      color: #333;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      color: #666;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+  }
+  
+  .notification-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &-primary {
+        background-color: #4a6cf7;
+        color: white;
+        
+        &:hover {
+          background-color: darken(#4a6cf7, 10%);
+        }
+      }
+      
+      &-secondary {
+        background-color: #f0f2f5;
+        color: #333;
+        
+        &:hover {
+          background-color: darken(#f0f2f5, 5%);
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Ensure the app content is not scrollable when notification is open
+:host-context(.first-time-notification-visible) {
+  height: 100vh;
+  overflow: hidden;
+}
+
 // Main content styles
 .main-content {
   flex: 1;
