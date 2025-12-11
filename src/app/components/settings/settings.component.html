@@ -3,37 +3,48 @@
     <div class="section">
       <h2>Data Management</h2>
       <p class="description">
-        Export your data to a JSON file for backup or transfer to another device.
-        You can also import previously exported data.
+        Export your data to a JSON file for backup or transfer to another
+        device. You can also import previously exported data.
       </p>
 
       <div class="data-actions">
         <div class="export-section">
           <h3>Export Data</h3>
           <p>Save all your items to a JSON file</p>
-          <button (click)="exportData()" class="export-btn">Export to JSON</button>
+          <button (click)="exportData()" class="export-btn">
+            Export to JSON
+          </button>
+        </div>
+
+        <div class="export-section">
+          <h3>Export Monthly Net Worth</h3>
+          <p>Export monthly net worth data as CSV for Excel graphs</p>
+          <button (click)="exportMonthlyData()" class="export-btn">
+            Export to CSV
+          </button>
         </div>
 
         <div class="import-section">
           <h3>Import Data</h3>
           <p>Load items from a previously exported JSON file</p>
-          
+
           <div class="file-input-wrapper">
             <label for="import-file" class="import-btn">
               Select JSON File
-              <input 
-                type="file" 
-                id="import-file" 
-                accept=".json" 
-                (change)="handleFileInput($event)" 
-                class="file-input">
+              <input
+                type="file"
+                id="import-file"
+                accept=".json"
+                (change)="handleFileInput($event)"
+                class="file-input"
+              />
             </label>
           </div>
-          
+
           @if (importStatus !== 'idle') {
-            <div class="import-status" [ngClass]="importStatus">
-              {{ importMessage }}
-            </div>
+          <div class="import-status" [ngClass]="importStatus">
+            {{ importMessage }}
+          </div>
           }
         </div>
       </div>
@@ -44,18 +55,22 @@
       <p class="description">
         These actions will modify your data. Use with caution.
       </p>
-      
+
       <div class="danger-actions">
         <div class="action-section">
           <h3>Add Sample Data</h3>
           <p>Add sample items to get started quickly</p>
-          <button (click)="addDummyData()" class="btn btn-warning">Add Dummy Data</button>
+          <button (click)="addDummyData()" class="btn btn-warning">
+            Add Dummy Data
+          </button>
         </div>
-        
+
         <div class="action-section">
           <h3>Delete All Items</h3>
           <p>Permanently remove all your items</p>
-          <button (click)="deleteAllItems()" class="btn btn-danger">Delete All Items</button>
+          <button (click)="deleteAllItems()" class="btn btn-danger">
+            Delete All Items
+          </button>
         </div>
       </div>
     </div>
@@ -63,12 +78,10 @@
     <div class="section">
       <h2>About</h2>
       <p>
-        NetWorther is a simple application to track your assets and calculate their current value.
-        All data is stored locally in your browser.
+        NetWorther is a simple application to track your assets and calculate
+        their current value. All data is stored locally in your browser.
       </p>
-      <p>
-        <strong>Version:</strong> 1.0.0
-      </p>
+      <p><strong>Version:</strong> 1.0.0</p>
     </div>
   </div>
 
