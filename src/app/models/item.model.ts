@@ -15,9 +15,10 @@ export const CATEGORIES = [
   'Jewelry',
   'Collectibles',
   'Art',
+  'Books',
   'Clothing',
   'Sports Equipment',
   'Tools',
   'Board Games',
-  'Other'
+  'Other',
 ];

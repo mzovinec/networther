@@ -1,0 +1,95 @@
+<div class="yearly-breakdown-container">
+  <div class="header">
+    <h1>Yearly Breakdown</h1>
+    <a [routerLink]="['/']" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <div class="summary-cards">
+    <div class="card">
+      <h3>Total Purchase Value</h3>
+      <p class="value">
+        {{
+          getTotalSummary().totalPurchaseValue | currency : "CZK" : "" : "1.0-0"
+        }}
+        CZK
+      </p>
+    </div>
+    <div class="card">
+      <h3>Total Current Value</h3>
+      <p class="value">
+        {{
+          getTotalSummary().totalCurrentValue | currency : "CZK" : "" : "1.0-0"
+        }}
+        CZK
+      </p>
+    </div>
+    <div class="card">
+      <h3>Total Depreciation</h3>
+      <p class="value">
+        {{
+          getTotalSummary().totalDepreciation | currency : "CZK" : "" : "1.0-0"
+        }}
+        CZK
+      </p>
+    </div>
+    <div class="card">
+      <h3>Total Items</h3>
+      <p class="value">{{ getTotalSummary().totalItems }}</p>
+    </div>
+  </div>
+
+  <div class="breakdown-section">
+    <h2>Breakdown by Year</h2>
+
+    @if (yearlyBreakdown().length === 0) {
+    <p class="empty-state">
+      No items added yet. Add some items to see yearly breakdown.
+    </p>
+    } @else {
+    <div class="yearly-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Items</th>
+            <th>Purchase Value (CZK)</th>
+            <th>Current Value (CZK)</th>
+            <th>Total Depreciation (CZK)</th>
+            <th>Depreciation %</th>
+            <th>Retention %</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (yearData of yearlyBreakdown(); track yearData.year) {
+          <tr>
+            <td>
+              <strong>{{ yearData.year }}</strong>
+            </td>
+            <td>{{ yearData.itemCount }}</td>
+            <td>
+              {{ yearData.purchaseValue | currency : "CZK" : "" : "1.0-0" }}
+            </td>
+            <td>
+              {{ yearData.currentValue | currency : "CZK" : "" : "1.0-0" }}
+            </td>
+            <td>
+              {{ yearData.depreciation | currency : "CZK" : "" : "1.0-0" }}
+            </td>
+            <td>
+              <span class="percentage-badge negative">
+                -{{ getDepreciationPercentage(yearData) | number : "1.1-1" }}%
+              </span>
+            </td>
+            <td>
+              <span class="percentage-badge positive">
+                {{ getRetentionPercentage(yearData) | number : "1.1-1" }}%
+              </span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+  </div>
+</div>

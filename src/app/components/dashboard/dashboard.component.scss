@@ -13,18 +13,18 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  
+
   h2 {
     font-size: 1.5rem;
     color: #1976d2;
     margin: 0 0 8px 0;
   }
-  
+
   p {
     color: #555;
     margin: 0 0 16px 0;
   }
-  
+
   .clear-filter {
     background-color: #f44336;
     color: white;
@@ -34,7 +34,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s;
-    
+
     &:hover {
       background-color: #d32f2f;
     }
@@ -45,7 +45,7 @@
   margin-bottom: 32px;
   text-align: center;
   position: relative;
-  
+
   .clear-filter {
     background-color: #f44336;
     color: white;
@@ -56,7 +56,7 @@
     cursor: pointer;
     margin-top: 12px;
     transition: background-color 0.2s;
-    
+
     &:hover {
       background-color: #d32f2f;
     }
@@ -79,7 +79,7 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 24px;
   margin-bottom: 40px;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -90,13 +90,13 @@ h1 {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
-  
+
   h2 {
     font-size: 1.25rem;
     margin-bottom: 16px;
     color: #555;
   }
-  
+
   .value {
     font-size: 2rem;
     font-weight: 600;
@@ -105,16 +105,16 @@ h1 {
 
 .net-worth {
   background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
-  
+
   .value {
     color: #00838f;
     margin-bottom: 10px;
   }
-  
+
   .percentage-container {
     margin-top: 5px;
   }
-  
+
   .percentage-indicator {
     font-size: 0.9rem;
     color: #006064;
@@ -123,7 +123,7 @@ h1 {
     background-color: rgba(178, 235, 242, 0.5);
     border-radius: 4px;
     display: inline-block;
-    
+
     .label {
       font-weight: 500;
     }
@@ -132,19 +132,19 @@ h1 {
 
 .depreciation {
   background: linear-gradient(135deg, #fff8e1, #ffecb3);
-  
+
   .value {
     color: #ff8f00;
     margin-bottom: 10px;
   }
-  
+
   .depreciation-percentages {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-top: 5px;
   }
-  
+
   .percentage-indicator {
     font-size: 0.9rem;
     color: #b26a00;
@@ -153,7 +153,7 @@ h1 {
     background-color: rgba(255, 236, 179, 0.5);
     border-radius: 4px;
     display: inline-block;
-    
+
     .label {
       font-weight: 500;
     }
@@ -162,7 +162,7 @@ h1 {
 
 .item-count {
   background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-  
+
   .value {
     color: #2e7d32;
   }
@@ -173,11 +173,11 @@ h1 {
   grid-template-columns: 1fr;
   gap: 32px;
   margin-bottom: 40px;
-  
+
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   @media (max-width: 480px) {
     gap: 24px;
   }
@@ -195,18 +195,18 @@ h1 {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  
+
   h2 {
     font-size: 1.4rem;
     color: #333;
     margin: 0;
   }
-  
+
   .view-all {
     color: #2196f3;
     text-decoration: none;
     font-weight: 500;
-    
+
     &:hover {
       text-decoration: underline;
     }
@@ -216,19 +216,20 @@ h1 {
 table {
   width: 100%;
   border-collapse: collapse;
-  
-  th, td {
+
+  th,
+  td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #eee;
   }
-  
+
   th {
     color: #666;
     font-weight: 600;
     font-size: 0.9rem;
   }
-  
+
   td {
     font-size: 1rem;
   }
@@ -238,7 +239,7 @@ table {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
-  
+
   @media (max-width: 480px) {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 12px;
@@ -254,51 +255,51 @@ table {
   transition: all 0.2s ease;
   cursor: pointer;
   border: 2px solid transparent;
-  
+
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #f0f0f0;
   }
-  
+
   &.active {
     border-color: #2196f3;
     background-color: #e3f2fd;
-    
+
     h3 {
       color: #1976d2;
     }
-    
+
     .click-hint {
       opacity: 0;
     }
   }
-  
+
   h3 {
     font-size: 1.1rem;
     margin-bottom: 8px;
     color: #333;
   }
-  
+
   .count {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 4px;
   }
-  
+
   .value {
     font-size: 1.2rem;
     font-weight: 600;
     color: #2196f3;
     margin-bottom: 4px;
   }
-  
+
   .percentage {
     font-size: 0.9rem;
     color: #777;
     margin-bottom: 8px;
   }
-  
+
   .click-hint {
     font-size: 0.8rem;
     color: #999;
@@ -306,7 +307,7 @@ table {
     opacity: 0;
     transition: opacity 0.2s ease;
   }
-  
+
   &:hover .click-hint {
     opacity: 1;
   }
@@ -324,6 +325,7 @@ table {
 .actions {
   display: flex;
   justify-content: center;
+  gap: 1rem;
 }
 
 .add-item-btn {
@@ -335,8 +337,82 @@ table {
   border-radius: 8px;
   font-weight: 500;
   transition: background-color 0.2s;
-  
+
   &:hover {
     background-color: #1976d2;
+  }
+}
+
+.view-switch-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: #f57c00;
+  }
+}
+
+.yearly-section {
+  .yearly-table {
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        background-color: #f5f5f5;
+        border-bottom: 2px solid #ddd;
+
+        th {
+          padding: 1rem;
+          text-align: left;
+          font-weight: 600;
+          color: #333;
+          white-space: nowrap;
+        }
+      }
+
+      tbody {
+        tr {
+          border-bottom: 1px solid #e0e0e0;
+
+          &:hover {
+            background-color: #f9f9f9;
+          }
+
+          td {
+            padding: 1rem;
+            color: #333;
+          }
+        }
+      }
+    }
+  }
+
+  .percentage-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+
+    &.positive {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    &.negative {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
   }
 }
