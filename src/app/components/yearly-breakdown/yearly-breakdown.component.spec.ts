@@ -140,9 +140,8 @@ describe('YearlyBreakdownComponent (characterization)', () => {
   it('getDepreciationPercentage() and getRetentionPercentage() for a depreciating year (2022)', () => {
     const fixture = createComponent();
     const breakdown = fixture.componentInstance.yearlyBreakdown();
-    const year2022 = breakdown.find(
-      (entry: { year: number }) => entry.year === 2022
-    );
+    const year2022 = breakdown.find((entry) => entry.year === 2022)!;
+    expect(year2022).toBeDefined();
 
     // depreciation% = 900/3000*100 = 30
     expect(
@@ -158,9 +157,8 @@ describe('YearlyBreakdownComponent (characterization)', () => {
   it('pins APPRECIATING year (2023): depreciation% goes negative, retention% exceeds 100', () => {
     const fixture = createComponent();
     const breakdown = fixture.componentInstance.yearlyBreakdown();
-    const year2023 = breakdown.find(
-      (entry: { year: number }) => entry.year === 2023
-    );
+    const year2023 = breakdown.find((entry) => entry.year === 2023)!;
+    expect(year2023).toBeDefined();
 
     // 2023 currentValue (2200) > purchaseValue (2000): the year appreciated.
     // depreciation% = -200/2000*100 = -10. Current behavior reports a NEGATIVE

@@ -139,42 +139,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .sort((a, b) => b.totalValue - a.totalValue);
     });
 
-    // Yearly breakdown
-    this.yearlyBreakdown = computed(() => {
-      const yearMap = new Map<
-        number,
-        {
-          year: number;
-          purchaseValue: number;
-          currentValue: number;
-          depreciation: number;
-          itemCount: number;
-        }
-      >();
-
-      getFilteredItems().forEach((item: Item) => {
-        const year = new Date(item.purchaseDate).getFullYear();
-
-        if (!yearMap.has(year)) {
-          yearMap.set(year, {
-            year,
-            purchaseValue: 0,
-            currentValue: 0,
-            depreciation: 0,
-            itemCount: 0,
-          });
-        }
-
-        const yearData = yearMap.get(year)!;
-        yearData.purchaseValue += item.purchasePrice;
-        yearData.currentValue += item.currentValue;
-        yearData.depreciation += item.purchasePrice - item.currentValue;
-        yearData.itemCount += 1;
-      });
-
-      return Array.from(yearMap.values()).sort((a, b) => b.year - a.year);
-    });
-    // Toggle current year filter
+    // Yearly breakdown (over the filtered items)
+    this.yearlyBreakdown = computed(() =>
+      this.itemService.getYearlyBreakdown(getFilteredItems())
+    );
   }
   toggleCurrentYearOnly(): void {
     this.showCurrentYearOnly.set(!this.showCurrentYearOnly());
@@ -214,13 +182,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     purchaseValue: number,
     depreciation: number
   ): number {
-    if (purchaseValue === 0) return 0;
-    return (depreciation / purchaseValue) * 100;
+    return this.itemService.depreciationPercentage(purchaseValue, depreciation);
   }
 
   // Calculate retention percentage for yearly data
   getRetentionPercentage(purchaseValue: number, currentValue: number): number {
-    if (purchaseValue === 0) return 0;
-    return (currentValue / purchaseValue) * 100;
+    return this.itemService.retentionPercentage(purchaseValue, currentValue);
   }
 }

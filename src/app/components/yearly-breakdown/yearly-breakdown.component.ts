@@ -1,16 +1,8 @@
-import { Component, computed } from '@angular/core';
+import { Component, Signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ItemService } from '../../services/item.service';
-import { Item } from '../../models/item.model';
-
-interface YearlyData {
-  year: number;
-  purchaseValue: number;
-  currentValue: number;
-  depreciation: number;
-  itemCount: number;
-}
+import { Item, YearlyData } from '../../models/item.model';
 
 @Component({
   selector: 'app-yearly-breakdown',
@@ -20,73 +12,46 @@ interface YearlyData {
   styleUrls: ['./yearly-breakdown.component.scss'],
 })
 export class YearlyBreakdownComponent {
-  items: any;
-  yearlyBreakdown: any;
+  readonly items: Signal<Item[]>;
+  readonly yearlyBreakdown: Signal<YearlyData[]>;
 
   constructor(private itemService: ItemService) {
     this.items = this.itemService.getItems();
-
-    // Calculate yearly breakdown
-    this.yearlyBreakdown = computed(() => {
-      const yearMap = new Map<number, YearlyData>();
-
-      this.items().forEach((item: Item) => {
-        const year = new Date(item.purchaseDate).getFullYear();
-
-        if (!yearMap.has(year)) {
-          yearMap.set(year, {
-            year,
-            purchaseValue: 0,
-            currentValue: 0,
-            depreciation: 0,
-            itemCount: 0,
-          });
-        }
-
-        const yearData = yearMap.get(year)!;
-        yearData.purchaseValue += item.purchasePrice;
-        yearData.currentValue += item.currentValue;
-        yearData.depreciation += item.purchasePrice - item.currentValue;
-        yearData.itemCount += 1;
-      });
-
-      // Convert map to array and sort by year (descending)
-      return Array.from(yearMap.values()).sort((a, b) => b.year - a.year);
-    });
+    this.yearlyBreakdown = computed(() =>
+      this.itemService.getYearlyBreakdown(this.items())
+    );
   }
 
-  // Calculate total depreciation percentage
   getDepreciationPercentage(yearData: YearlyData): number {
-    if (yearData.purchaseValue === 0) return 0;
-    return (yearData.depreciation / yearData.purchaseValue) * 100;
+    return this.itemService.depreciationPercentage(
+      yearData.purchaseValue,
+      yearData.depreciation
+    );
   }
 
-  // Calculate retention percentage
   getRetentionPercentage(yearData: YearlyData): number {
-    if (yearData.purchaseValue === 0) return 0;
-    return (yearData.currentValue / yearData.purchaseValue) * 100;
+    return this.itemService.retentionPercentage(
+      yearData.purchaseValue,
+      yearData.currentValue
+    );
   }
 
-  // Get total summary
   getTotalSummary() {
     const breakdown = this.yearlyBreakdown();
     return {
       totalPurchaseValue: breakdown.reduce(
-        (sum: number, year: YearlyData) => sum + year.purchaseValue,
+        (sum, year) => sum + year.purchaseValue,
         0
       ),
       totalCurrentValue: breakdown.reduce(
-        (sum: number, year: YearlyData) => sum + year.currentValue,
+        (sum, year) => sum + year.currentValue,
         0
       ),
       totalDepreciation: breakdown.reduce(
-        (sum: number, year: YearlyData) => sum + year.depreciation,
+        (sum, year) => sum + year.depreciation,
         0
       ),
-      totalItems: breakdown.reduce(
-        (sum: number, year: YearlyData) => sum + year.itemCount,
-        0
-      ),
+      totalItems: breakdown.reduce((sum, year) => sum + year.itemCount, 0),
     };
   }
 }

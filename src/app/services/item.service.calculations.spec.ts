@@ -214,4 +214,25 @@ describe('ItemService financial calculations', () => {
       expect(service.calculateDepreciation()).toBe(50);
     });
   });
+
+  describe('getDepreciationRate (single source of truth)', () => {
+    it('returns the per-category annual rate', () => {
+      expect(service.getDepreciationRate('Electronics')).toBe(0.2);
+      expect(service.getDepreciationRate('Clothing')).toBe(0.3);
+      expect(service.getDepreciationRate('Tools')).toBe(0.08);
+    });
+
+    it('includes Books at 0.20 (previously omitted from the settings monthly table)', () => {
+      expect(service.getDepreciationRate('Books')).toBe(0.2);
+    });
+
+    it('keeps negative (appreciating) rates for Art and Collectibles', () => {
+      expect(service.getDepreciationRate('Art')).toBe(-0.03);
+      expect(service.getDepreciationRate('Collectibles')).toBe(-0.02);
+    });
+
+    it('falls back to the default rate 0.12 for unknown categories', () => {
+      expect(service.getDepreciationRate('Nonexistent')).toBe(0.12);
+    });
+  });
 });

@@ -146,23 +146,11 @@ export class SettingsComponent {
             (currentDate.getFullYear() - itemDate.getFullYear()) * 12 +
             (currentDate.getMonth() - itemDate.getMonth());
 
-          // Estimate value at that point in time
-          const category = item.category;
-          const depreciationRates: Record<string, number> = {
-            Electronics: 0.2 / 12,
-            Furniture: 0.1 / 12,
-            Vehicles: 0.15 / 12,
-            Jewelry: 0.05 / 12,
-            Collectibles: -0.02 / 12,
-            Art: -0.03 / 12,
-            Clothing: 0.3 / 12,
-            'Sports Equipment': 0.15 / 12,
-            Tools: 0.08 / 12,
-            'Board Games': 0.05 / 12,
-            Other: 0.12 / 12,
-          };
-
-          const monthlyRate = depreciationRates[category] || 0.12 / 12;
+          // Estimate value at that point in time. Derive the monthly rate from
+          // the service's single-source annual rate table (so all categories —
+          // including Books — stay consistent with the rest of the app).
+          const monthlyRate =
+            this.itemService.getDepreciationRate(item.category) / 12;
           const valueAtMonth =
             item.purchasePrice * Math.pow(1 - monthlyRate, monthsSincePurchase);
           const floorValue =
