@@ -175,15 +175,10 @@ describe('YearlyBreakdownComponent (characterization)', () => {
     ).toBeCloseTo(110, 2);
   });
 
-  // ---------------------------------------------------------------------------
-  // KNOWN BUG — intentionally RED until the refactor fixes it.
-  // Template (yearly-breakdown.component.html:80) hard-codes a leading "-" in
-  // front of an already-signed percentage: `-{{ getDepreciationPercentage() }}%`.
-  // For the appreciating year 2023 the value is -10, so the cell renders the
-  // nonsense "--10.0%". Intended: a single sign (e.g. "-10.0%"). This asserts the
-  // intended behavior, so it FAILS now and goes green once the template is fixed.
-  // ---------------------------------------------------------------------------
-  it('does NOT render a double-minus for an appreciating year [red until fixed]', () => {
+  // Regression guard: the template must not render a double-minus for an
+  // appreciating year. (Previously it hard-coded a leading "-" before an
+  // already-signed percentage, so year 2023 (-10) rendered "--10.0%".)
+  it('does not render a double-minus for an appreciating year', () => {
     const fixture = createComponent();
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
     expect(text).not.toMatch(/--\d/);

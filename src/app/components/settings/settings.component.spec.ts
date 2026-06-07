@@ -1,10 +1,6 @@
-// KNOWN BUG (red until fixed): addDummyData REPLACES instead of APPENDS.
-// Intended: append sample data to existing items. See memory project-angular21-vitest-refactor.
-//
-// This spec asserts the INTENDED append behavior and will FAIL against the
-// current code (addDummyData -> itemService.importFromJson(...) which does
-// items.set(...), wiping pre-existing items). Do NOT "fix" this by weakening
-// the assertions; fix addDummyData to append instead.
+// Regression guard: addDummyData must APPEND sample data to existing items,
+// not replace them. (Previously it called importFromJson -> items.set(...),
+// wiping pre-existing items; fixed to use itemService.addItems(...).)
 
 import { vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
@@ -17,7 +13,7 @@ import {
 import { SettingsComponent } from './settings.component';
 import { ItemService } from '../../services/item.service';
 
-describe('SettingsComponent.addDummyData() (KNOWN BUG: replaces instead of appends)', () => {
+describe('SettingsComponent.addDummyData()', () => {
   beforeEach(() => {
     localStorage.clear();
     // Recreate the root ItemService singleton per test so it re-reads
@@ -29,7 +25,7 @@ describe('SettingsComponent.addDummyData() (KNOWN BUG: replaces instead of appen
     localStorage.clear();
   });
 
-  it('is a KNOWN BUG (red until fixed): should APPEND sample data, preserving existing items', () => {
+  it('appends sample data, preserving existing items', () => {
     // Seed TWO existing items BEFORE TestBed creates the component / injects ItemService.
     localStorage.setItem(
       'items',

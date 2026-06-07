@@ -49,30 +49,20 @@ export class SettingsComponent {
               throw new Error('Invalid dummy data format');
             }
 
-            // Process each item to ensure it has all required fields
-            const processedItems = data.items.map((item: any) => ({
-              ...item,
-              purchaseDate: new Date(item.purchaseDate).toISOString(),
-              // Ensure all required fields are present with defaults if missing
-              description: item.notes || '',
-              location: 'Unknown',
-              serialNumber: '',
-              warrantyExpiry: '',
+            // Map to clean Item shape (Date purchaseDate); append to existing
+            // items rather than replacing them.
+            const newItems = data.items.map((item: any) => ({
+              name: item.name,
+              category: item.category,
+              purchasePrice: item.purchasePrice,
+              purchaseDate: new Date(item.purchaseDate),
+              currentValue: item.currentValue,
+              notes: item.notes || '',
             }));
 
-            // Import the data using the existing import functionality
-            const importSuccessful = this.itemService.importFromJson(
-              JSON.stringify({
-                items: processedItems,
-              })
-            );
-
-            if (importSuccessful) {
-              this.importStatus = 'success';
-              this.importMessage = 'Dummy data has been added successfully.';
-            } else {
-              throw new Error('Failed to import data');
-            }
+            this.itemService.addItems(newItems);
+            this.importStatus = 'success';
+            this.importMessage = 'Sample data has been added successfully.';
           } catch (error) {
             console.error('Error processing dummy data:', error);
             this.importStatus = 'error';

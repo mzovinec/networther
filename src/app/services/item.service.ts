@@ -42,6 +42,18 @@ export class ItemService {
     return newItem;
   }
 
+  // Append multiple items, assigning fresh sequential ids (no collisions with
+  // existing items). Used for loading sample/dummy data without wiping data.
+  addItems(items: Omit<Item, 'id'>[]): Item[] {
+    const newItems: Item[] = items.map((item) => ({
+      ...item,
+      id: (this.nextId++).toString(),
+    }));
+    this.items.update((existing) => [...existing, ...newItems]);
+    this.saveItems();
+    return newItems;
+  }
+
   updateItem(updatedItem: Item) {
     this.items.update((items) =>
       items.map((item) => (item.id === updatedItem.id ? updatedItem : item))
