@@ -8,6 +8,14 @@ export interface Item {
   notes?: string;
 }
 
+export interface YearlyData {
+  year: number;
+  purchaseValue: number;
+  currentValue: number;
+  depreciation: number;
+  itemCount: number;
+}
+
 export const CATEGORIES = [
   'Electronics',
   'Furniture',

@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // Global styles
 :host {
   display: flex;
@@ -212,7 +214,7 @@
         color: white;
         
         &:hover {
-          background-color: darken(#4a6cf7, 10%);
+          background-color: color.adjust(#4a6cf7, $lightness: -10%);
         }
       }
       
@@ -221,7 +223,7 @@
         color: #333;
         
         &:hover {
-          background-color: darken(#f0f2f5, 5%);
+          background-color: color.adjust(#f0f2f5, $lightness: -5%);
         }
       }
     }

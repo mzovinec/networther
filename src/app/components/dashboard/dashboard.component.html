@@ -48,7 +48,7 @@
       <div class="depreciation-percentages">
         <p class="percentage-indicator">
           <span class="label"
-            >- {{ depreciationPercentageFromCurrent() | number : "1.1-1" }}%
+            >{{ depreciationPercentageFromCurrent() | number : "1.1-1" }}%
             depreciation</span
           >
         </p>
@@ -178,7 +178,7 @@
               </td>
               <td>
                 <span class="percentage-badge negative">
-                  -{{
+                  {{
                     getDepreciationPercentage(
                       yearData.purchaseValue,
                       yearData.depreciation

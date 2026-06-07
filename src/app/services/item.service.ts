@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Item, CATEGORIES } from '../models/item.model';
+import { Item, YearlyData, CATEGORIES } from '../models/item.model';
 
 @Injectable({
   providedIn: 'root',
@@ -7,6 +7,26 @@ import { Item, CATEGORIES } from '../models/item.model';
 export class ItemService {
   private items = signal<Item[]>([]);
   private nextId = 1;
+
+  // Annual depreciation rate per category (negative = appreciates).
+  // Single source of truth — used by estimateResaleValue and the settings
+  // monthly net-worth export.
+  private readonly depreciationRates: Record<string, number> = {
+    Electronics: 0.2, // 20% per year
+    Books: 0.2,
+    Furniture: 0.1,
+    Vehicles: 0.15,
+    Jewelry: 0.05,
+    Collectibles: -0.02, // May appreciate
+    Art: -0.03, // May appreciate
+    Clothing: 0.3,
+    'Sports Equipment': 0.15,
+    Tools: 0.08,
+    'Board Games': 0.05, // Only 5% depreciation - many become collectibles
+    Other: 0.12,
+  };
+
+  private readonly defaultDepreciationRate = 0.12;
 
   constructor() {
     // Load items from localStorage if available
@@ -42,6 +62,18 @@ export class ItemService {
     return newItem;
   }
 
+  // Append multiple items, assigning fresh sequential ids (no collisions with
+  // existing items). Used for loading sample/dummy data without wiping data.
+  addItems(items: Omit<Item, 'id'>[]): Item[] {
+    const newItems: Item[] = items.map((item) => ({
+      ...item,
+      id: (this.nextId++).toString(),
+    }));
+    this.items.update((existing) => [...existing, ...newItems]);
+    this.saveItems();
+    return newItems;
+  }
+
   updateItem(updatedItem: Item) {
     this.items.update((items) =>
       items.map((item) => (item.id === updatedItem.id ? updatedItem : item))
@@ -71,26 +103,58 @@ export class ItemService {
     );
   }
 
+  // Aggregate the given items by purchase year, sorted by year descending.
+  // Takes an explicit list so callers can pass filtered or unfiltered items.
+  getYearlyBreakdown(items: Item[]): YearlyData[] {
+    const yearMap = new Map<number, YearlyData>();
+
+    items.forEach((item) => {
+      const year = new Date(item.purchaseDate).getFullYear();
+
+      if (!yearMap.has(year)) {
+        yearMap.set(year, {
+          year,
+          purchaseValue: 0,
+          currentValue: 0,
+          depreciation: 0,
+          itemCount: 0,
+        });
+      }
+
+      const yearData = yearMap.get(year)!;
+      yearData.purchaseValue += item.purchasePrice;
+      yearData.currentValue += item.currentValue;
+      yearData.depreciation += item.purchasePrice - item.currentValue;
+      yearData.itemCount += 1;
+    });
+
+    return Array.from(yearMap.values()).sort((a, b) => b.year - a.year);
+  }
+
+  // Depreciation as a percentage of original (purchase) value.
+  depreciationPercentage(purchaseValue: number, depreciation: number): number {
+    if (purchaseValue === 0) return 0;
+    return (depreciation / purchaseValue) * 100;
+  }
+
+  // Retained value as a percentage of original (purchase) value.
+  retentionPercentage(purchaseValue: number, currentValue: number): number {
+    if (purchaseValue === 0) return 0;
+    return (currentValue / purchaseValue) * 100;
+  }
+
+  // Annual depreciation rate for a category (falls back to the default rate
+  // for unknown categories). Single source of truth for the rate table.
+  getDepreciationRate(category: string): number {
+    const rate = this.depreciationRates[category];
+    return rate === undefined ? this.defaultDepreciationRate : rate;
+  }
+
   // Helper method to estimate resale value based on category and age
   estimateResaleValue(item: Omit<Item, 'id' | 'currentValue'>): number {
     const ageInYears = this.calculateAgeInYears(item.purchaseDate);
 
-    const depreciationRates: Record<string, number> = {
-      Electronics: 0.2, // 20% per year
-      Books: 0.2,
-      Furniture: 0.1,
-      Vehicles: 0.15,
-      Jewelry: 0.05,
-      Collectibles: -0.02, // May appreciate
-      Art: -0.03, // May appreciate
-      Clothing: 0.3,
-      'Sports Equipment': 0.15,
-      Tools: 0.08,
-      'Board Games': 0.05, // Only 5% depreciation - many become collectibles
-      Other: 0.12,
-    };
-
-    const rate = depreciationRates[item.category] || 0.12;
+    const rate = this.getDepreciationRate(item.category);
 
     // Calculate depreciated value (or appreciated if rate is negative)
     let estimatedValue = item.purchasePrice * Math.pow(1 - rate, ageInYears);

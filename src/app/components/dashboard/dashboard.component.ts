@@ -1,16 +1,15 @@
-import {
-  Component,
-  computed,
-  signal,
-  OnInit,
-  OnDestroy,
-  effect,
-} from '@angular/core';
+import { Component, Signal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemService } from '../../services/item.service';
 import { RouterLink } from '@angular/router';
-import { Router } from '@angular/router';
-import { Item } from '../../models/item.model';
+import { Item, YearlyData } from '../../models/item.model';
+
+interface CategorySummary {
+  category: string;
+  count: number;
+  totalValue: number;
+  percentage: string;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -19,17 +18,17 @@ import { Item } from '../../models/item.model';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit, OnDestroy {
-  items: any; // Signal<Item[]>
-  netWorth: any;
-  depreciation: any;
-  totalPurchaseValue: any;
+export class DashboardComponent {
+  items!: Signal<Item[]>;
+  netWorth!: Signal<number>;
+  depreciation!: Signal<number>;
+  totalPurchaseValue!: Signal<number>;
   selectedCategory = signal<string | null>(null);
-  topItems: any;
-  categorySummary: any;
+  topItems!: Signal<Item[]>;
+  categorySummary!: Signal<CategorySummary[]>;
   showCurrentYearOnly = signal<boolean>(false);
   currentView = signal<'dashboard' | 'yearly'>('dashboard');
-  yearlyBreakdown: any;
+  yearlyBreakdown!: Signal<YearlyData[]>;
 
   // Filtered item count
   filteredItemCount = computed(() => {
@@ -62,7 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return (this.depreciation() / (currentValue + this.depreciation())) * 100;
   });
 
-  constructor(private itemService: ItemService, private router: Router) {
+  constructor(private itemService: ItemService) {
     this.items = this.itemService.getItems();
 
     // Helper to get filtered items by year and category
@@ -110,8 +109,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Get top items, filtered by year and category
 
     this.topItems = computed(() => {
-      return getFilteredItems()
-        .sort((a: any, b: any) => b.currentValue - a.currentValue)
+      return [...getFilteredItems()]
+        .sort((a, b) => b.currentValue - a.currentValue)
         .slice(0, 5);
     });
 
@@ -139,42 +138,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .sort((a, b) => b.totalValue - a.totalValue);
     });
 
-    // Yearly breakdown
-    this.yearlyBreakdown = computed(() => {
-      const yearMap = new Map<
-        number,
-        {
-          year: number;
-          purchaseValue: number;
-          currentValue: number;
-          depreciation: number;
-          itemCount: number;
-        }
-      >();
-
-      getFilteredItems().forEach((item: Item) => {
-        const year = new Date(item.purchaseDate).getFullYear();
-
-        if (!yearMap.has(year)) {
-          yearMap.set(year, {
-            year,
-            purchaseValue: 0,
-            currentValue: 0,
-            depreciation: 0,
-            itemCount: 0,
-          });
-        }
-
-        const yearData = yearMap.get(year)!;
-        yearData.purchaseValue += item.purchasePrice;
-        yearData.currentValue += item.currentValue;
-        yearData.depreciation += item.purchasePrice - item.currentValue;
-        yearData.itemCount += 1;
-      });
-
-      return Array.from(yearMap.values()).sort((a, b) => b.year - a.year);
-    });
-    // Toggle current year filter
+    // Yearly breakdown (over the filtered items)
+    this.yearlyBreakdown = computed(() =>
+      this.itemService.getYearlyBreakdown(getFilteredItems())
+    );
   }
   toggleCurrentYearOnly(): void {
     this.showCurrentYearOnly.set(!this.showCurrentYearOnly());
@@ -191,19 +158,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private titleEffect = effect(() => {
-    // This effect will run whenever selectedCategory signal changes
-    const category = this.selectedCategory();
-  });
-
-  ngOnInit(): void {
-    // Initial title update
-  }
-
-  ngOnDestroy(): void {
-    // Clean up any subscriptions if needed
-  }
-
   // Switch between views
   switchView(view: 'dashboard' | 'yearly'): void {
     this.currentView.set(view);
@@ -214,13 +168,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     purchaseValue: number,
     depreciation: number
   ): number {
-    if (purchaseValue === 0) return 0;
-    return (depreciation / purchaseValue) * 100;
+    return this.itemService.depreciationPercentage(purchaseValue, depreciation);
   }
 
   // Calculate retention percentage for yearly data
   getRetentionPercentage(purchaseValue: number, currentValue: number): number {
-    if (purchaseValue === 0) return 0;
-    return (currentValue / purchaseValue) * 100;
+    return this.itemService.retentionPercentage(purchaseValue, currentValue);
   }
 }

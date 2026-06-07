@@ -140,9 +140,8 @@ describe('YearlyBreakdownComponent (characterization)', () => {
   it('getDepreciationPercentage() and getRetentionPercentage() for a depreciating year (2022)', () => {
     const fixture = createComponent();
     const breakdown = fixture.componentInstance.yearlyBreakdown();
-    const year2022 = breakdown.find(
-      (entry: { year: number }) => entry.year === 2022
-    );
+    const year2022 = breakdown.find((entry) => entry.year === 2022)!;
+    expect(year2022).toBeDefined();
 
     // depreciation% = 900/3000*100 = 30
     expect(
@@ -158,9 +157,8 @@ describe('YearlyBreakdownComponent (characterization)', () => {
   it('pins APPRECIATING year (2023): depreciation% goes negative, retention% exceeds 100', () => {
     const fixture = createComponent();
     const breakdown = fixture.componentInstance.yearlyBreakdown();
-    const year2023 = breakdown.find(
-      (entry: { year: number }) => entry.year === 2023
-    );
+    const year2023 = breakdown.find((entry) => entry.year === 2023)!;
+    expect(year2023).toBeDefined();
 
     // 2023 currentValue (2200) > purchaseValue (2000): the year appreciated.
     // depreciation% = -200/2000*100 = -10. Current behavior reports a NEGATIVE
@@ -175,15 +173,10 @@ describe('YearlyBreakdownComponent (characterization)', () => {
     ).toBeCloseTo(110, 2);
   });
 
-  // ---------------------------------------------------------------------------
-  // KNOWN BUG — intentionally RED until the refactor fixes it.
-  // Template (yearly-breakdown.component.html:80) hard-codes a leading "-" in
-  // front of an already-signed percentage: `-{{ getDepreciationPercentage() }}%`.
-  // For the appreciating year 2023 the value is -10, so the cell renders the
-  // nonsense "--10.0%". Intended: a single sign (e.g. "-10.0%"). This asserts the
-  // intended behavior, so it FAILS now and goes green once the template is fixed.
-  // ---------------------------------------------------------------------------
-  it('does NOT render a double-minus for an appreciating year [red until fixed]', () => {
+  // Regression guard: the template must not render a double-minus for an
+  // appreciating year. (Previously it hard-coded a leading "-" before an
+  // already-signed percentage, so year 2023 (-10) rendered "--10.0%".)
+  it('does not render a double-minus for an appreciating year', () => {
     const fixture = createComponent();
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
     expect(text).not.toMatch(/--\d/);
