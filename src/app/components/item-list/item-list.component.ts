@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, Signal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ItemService } from '../../services/item.service';
@@ -13,13 +13,13 @@ import { Item } from '../../models/item.model';
 })
 export class ItemListComponent {
   // Raw items from service
-  private rawItems: any;
-  
+  private rawItems: Signal<Item[]>;
+
   // Filtering state
   filterCategory = signal<string | null>(null);
-  
+
   // Sorting state
-  sortColumn = signal<string>('currentValue');
+  sortColumn = signal<keyof Item>('currentValue');
   sortDirection = signal<'asc' | 'desc'>('desc');
   
   // Page title
@@ -42,20 +42,20 @@ export class ItemListComponent {
     
     // Apply sorting
     return items.sort((a, b) => {
+      const aValue = a[column];
+      const bValue = b[column];
       let comparison = 0;
-      
+
       // Handle different data types
       if (column === 'purchaseDate') {
-        // Date comparison
-        comparison = new Date(a[column]).getTime() - new Date(b[column]).getTime();
-      } else if (typeof a[column] === 'string') {
-        // String comparison
-        comparison = a[column].localeCompare(b[column]);
+        comparison =
+          new Date(aValue as Date).getTime() - new Date(bValue as Date).getTime();
+      } else if (typeof aValue === 'string' && typeof bValue === 'string') {
+        comparison = aValue.localeCompare(bValue);
       } else {
-        // Number comparison
-        comparison = a[column] - b[column];
+        comparison = Number(aValue) - Number(bValue);
       }
-      
+
       // Apply sort direction
       return direction === 'asc' ? comparison : -comparison;
     });
@@ -84,7 +84,7 @@ export class ItemListComponent {
   }
   
   // Sort items by column
-  sortBy(column: string): void {
+  sortBy(column: keyof Item): void {
     if (this.sortColumn() === column) {
       // Toggle direction if same column
       this.sortDirection.update(current => current === 'asc' ? 'desc' : 'asc');
@@ -96,7 +96,7 @@ export class ItemListComponent {
   }
   
   // Get sort icon class
-  getSortIconClass(column: string): string {
+  getSortIconClass(column: keyof Item): string {
     if (this.sortColumn() !== column) return 'sort-icon';
     return this.sortDirection() === 'asc' ? 'sort-icon asc' : 'sort-icon desc';
   }
